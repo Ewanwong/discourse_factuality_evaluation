@@ -1,6 +1,6 @@
 
 from my_model_w_input_arcs import RAEBaseModel
-from .my_model_w_input_arcs_data import set_random_seed, load_and_cache_examples
+from my_model_w_input_arcs_data import set_random_seed, load_and_cache_examples
 from transformers import AutoConfig, LongformerTokenizer, AdamW, get_scheduler
 import torch
 import torch.nn as nn
@@ -255,7 +255,7 @@ if __name__ == '__main__':
     tokenizer = LongformerTokenizer.from_pretrained('allenai/longformer-base-4096')
 
     data = 'cnndm'
-    data_type = 'entity'
+    data_type = 'generation'
 
     train_data_path = f'../data/{data}_{data_type}_rst_parsed_train.json'
     train_feature_path = f'../data/my_model_{data}_{data_type}_rst_parsed_train.pt'
@@ -287,7 +287,7 @@ if __name__ == '__main__':
     train_num = len(train_dataset)
 
     lr_scheduler = get_scheduler(
-            name="linear", optimizer=optimizer, num_warmup_steps=1500, num_training_steps=10 * train_num
+            name="linear", optimizer=optimizer, num_warmup_steps=1500, num_training_steps=20 * train_num
         )
 
     train(model, train_dataloader, eval_dataloader, test_dataloader, eval_save_path, test_save_path, log_file, optimizer, lr_scheduler=lr_scheduler, loss_fn=loss_fn, epochs=20, eval_steps=100)

@@ -1,5 +1,5 @@
 from datasets import load_dataset
-from transformers import AutoTokenizer, LongformerForMaskedLM, LongformerPreTrainedModel, LongformerModel, get_scheduler, AdamW
+from transformers import AutoTokenizer, LongformerForMaskedLM, LongformerPreTrainedModel, LongformerModel, get_scheduler, AdamW, DataCollatorForLanguageModeling
 import torch
 from torch.utils.data import Dataset, DataLoader
 import os
@@ -18,7 +18,6 @@ class CombinedDataset(Dataset):
 
     def __len__(self):
         return len(self.dataset1) + len(self.dataset2)
-
 
 
 def train(model, train_dataloader, eval_dataloader, epochs, optimizer, lr_scheduler, eval_steps):
@@ -47,8 +46,8 @@ def train(model, train_dataloader, eval_dataloader, epochs, optimizer, lr_schedu
 
             step += 1
 
-            if step % 100 == 0:
-                print(f'train loss: {sum(losses)/len(losses)}')
+            #if step % 100 == 0:
+            #    print(f'train loss: {sum(losses)/len(losses)}')
             
 
             if step % eval_steps == 0:
@@ -139,11 +138,11 @@ if __name__ == '__main__':
         train_dataset = CombinedDataset(tokenized_input_datasets['train'], tokenized_context_datasets['train'])
         eval_dataset = CombinedDataset(tokenized_input_datasets['validation'], tokenized_context_datasets['validation'])
 
-
+        data_collector = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=True, mlm_probability=0.15, pad_to_multiple_of=512, return_tensors='pt')
         torch.save(train_dataset, 'cnndm_train.pt')
         torch.save(eval_dataset, 'cnndm_dev.pt')
 
-    bsz = 4
+    bsz = 2
     epochs = 2
     lr = 5e-5
     train_dataloader = DataLoader(train_dataset, shuffle=True, batch_size=bsz)
