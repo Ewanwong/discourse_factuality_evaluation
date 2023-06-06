@@ -248,7 +248,7 @@ if __name__ == '__main__':
     tokenizer = LongformerTokenizer.from_pretrained('allenai/longformer-base-4096')
 
     data = 'cnndm'
-    data_type = 'generation'
+    data_type = 'entity'
 
     train_data_path = f'../data/{data}_{data_type}_rst_parsed_train.json'
     train_feature_path = f'../data/my_model_{data}_{data_type}_rst_parsed_train.pt'
@@ -283,4 +283,4 @@ if __name__ == '__main__':
             name="linear", optimizer=optimizer, num_warmup_steps=1500, num_training_steps=20 * train_num
         )
 
-    train(model, train_dataloader, eval_dataloader, test_dataloader, eval_save_path, test_save_path, log_file, optimizer, lr_scheduler=lr_scheduler, loss_fn=loss_fn, epochs=20, eval_steps=100)
+    train(model, train_dataloader, eval_dataloader, test_dataloader, eval_save_path, test_save_path, log_file, optimizer, lr_scheduler=lr_scheduler, loss_fn=loss_fn, epochs=20, eval_steps=200)
